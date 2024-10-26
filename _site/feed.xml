@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-10-26T14:24:09+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">새발로 하는 개발 일지</title><author><name>oweenia03</name></author><entry><title type="html">RFID를 이용한 도난 방지 무인 편의점</title><link href="http://localhost:4000/contest/2024/10/11/MEIT.html" rel="alternate" type="text/html" title="RFID를 이용한 도난 방지 무인 편의점" /><published>2024-10-11T00:00:00+09:00</published><updated>2024-10-11T00:00:00+09:00</updated><id>http://localhost:4000/contest/2024/10/11/MEIT</id><content type="html" xml:base="http://localhost:4000/contest/2024/10/11/MEIT.html"><![CDATA[<p><img src="/assets/images/meit_intro.jpg" alt="banner" /></p>
+
+<h3 id="meit란">MEIT란</h3>
+
+<ul>
+  <li>대회 소개
+    <blockquote>
+      <p>“Mechanical Electronic IT of sookmyung”의 약자로, 숙명여대 공과대학 기계시스템/지능형전자시스템/인공지능공학부 3개 전공이 협력하여 진행되는 전공 융합 프로젝트이다.
+대회는 약 두 달 동안 예선과 본선으로 진행되며, 참가자는 제작 및 예산 기획안을 작성한 후 최종적으로 하드웨어와 소프트웨어를 구현하여 본선 심사에 임하게 된다.</p>
+    </blockquote>
+  </li>
+  <li>대회 주제
+    <blockquote>
+      <p>“빅데이터 융합 어플리케이션”
+데이터 분석을 활용한 문제해결 및 HW, SW를 융합한 산출물 제작</p>
+    </blockquote>
+  </li>
+</ul>
+
+<h3 id="주제-소개">주제 소개</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Motivation</th>
+      <th style="text-align: center">Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![motivation](/assets/images/meit_motivation.png)</td>
+      <td style="text-align: center">![purpose](/assets/images/meit_purpose.png)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>무인 매장 절도 범죄를 방지하고자 <strong>rfid를 이용한 도난 방지 무인 편의점 구축</strong> 프로젝트를 진행함<br />
+이 아이디어는 <strong>세 가지 목적</strong>을 지님</p>
+
+<p><strong>1. ALL in One :</strong> 재고 파악/ 관리 / 도난 시도 조회를 하나의 웹사이트에서 한번에<br />
+<strong>2. Just Drop &amp; Pay :</strong> 간편한 결제 과정<br />
+<strong>3. Secure, Every Time :</strong> 미결제 상품 지나갈시 출입구 보안장치 활성화</p>
+
+<h3 id="매커니즘">매커니즘</h3>
+
+<p><img src="/assets/images/meit_process.png" alt="" />
+<br />아두이노 우노 보드와 RFID 태그 스티커를 이용해 상품 인식을 구현하고, Mysql과 PHP를 통해 재고 관리 및 결제 시스템을 개발함
+<br /></p>
+
+<h3 id="hw">HW</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">3D printing<br />핸드 리더기 제작</th>
+      <th style="text-align: center">최종 핸드 리더기</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![3D](/assets/images/meit_3d.png)</td>
+      <td style="text-align: center">![arduino_hand_reader](/assets/images/meit_hw_hand.png)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">계산대</td>
+      <td style="text-align: center">출입구</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![arduino_calculate_reader](/assets/images/meit_hw_calculate.png)</td>
+      <td style="text-align: center">![arduino_motor_reader](/assets/images/meit_hw_motor.png)</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>AUtoCAD를 사용해 리더기 모델을 제작하고, 3D 프린터로 출력함<br />리더기에 on/off 버튼과 LED 표시등 장착함</p>
+
+  <p>계산대에서 RFID 태그가 인식되면 부저 소리가 울리게 함 <br />
+출입문은 서보 모터로 자동 개폐됨</p>
+</blockquote>
+
+<h3 id="sw">SW</h3>
+<ul>
+  <li>
+    <h4 id="arduino">arduino</h4>
+    <ul>
+      <li>공통 기능 - uid 읽고 시리얼통신으로 uid 전송
+        <ol>
+          <li>handgun_led.ino : 버튼 on/off, led 기능</li>
+          <li>uid_read.ino : uid 인식 시 부저 기능</li>
+          <li>read_motor_final.ino : 파이썬 스크립트로부터 명령 받아 모터 작동</li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <h4 id="php--mysql">php / Mysql</h4>
+    <p><img src="/assets/images/meit_sw.png" alt="" /></p>
+
+    <ul>
+      <li>이 외 기타 코드
+        <ol>
+          <li>login.php / logout.php / users.sql</li>
+          <li>user data edit page.php / user data delete page.php<br /><br /></li>
+        </ol>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p><strong>Note:</strong> 코드 설명</p>
+
+  <p><strong>1. 전처리 과정</strong> - 재고정보를 db에 저장하는 과정<br />
+1.1 파이썬으로부터 전달받은 UID를 저장하여 실시간으로 uid를 호출할 수 있게 하는 파일<br />
+1.2 이 UID를 이용하여 제품 정보를 등록하는 입력폼을 제공하는파일<br />
+1.3 재고DB를 웹페이지에 출력하고 수정,삭제할 수 있게 하는 파일</p>
+
+  <p><strong>2. 재고 파악 과정</strong><br />
+2.1 sql쿼리를 이용하여 관리자가 원하는 옵션으로 재고DB에 저장된 정보를 검색할 수 있게 함<br />
+2.2 계산-키오스크에서는 계산 버튼을 누르면 AJAX요청으로 해당 UID를 전달받고,
+ update문을 이용해 제품의 계산여부 필드값이 Y로 수정되게 함</p>
+
+  <p><strong>3. 출입구</strong><br />
+3.1 계산 여부 필드값이 N인 제품이 인식되면 이를MotorDB에 저장하여 물품의 정보와 함께 인식된 시간도 확인할 수 있도록 함<br />
+3.11 이때, 동일 물품이 DB에 중복 저장되는 것을 방지하기위해 5분 내에 해당 UID로 기록된 데이터가 없을 때만 추가하도록 함</p>
+</blockquote>
+
+<ul>
+  <li>
+    <h4 id="python">python</h4>
+    <ol>
+      <li>아두이노 시리얼 포트에서 uid 값을 찾아서 이를 php 서버에 전송함
+        <ul>
+          <li>first_uid.py / calculate_uid.py / motor_uid.py<br />
+  <br /></li>
+        </ul>
+      </li>
+      <li>아두이노 서보모터에 개폐 명령을 내림
+        <ul>
+          <li>motor_open.py / motor_close.py</li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="결과물">결과물</h3>
+<h4 id="현장">현장</h4>
+<ul>
+  <li>
+    <p>시연 환경
+<img src="/assets/images/meit_result_1.png" alt="" /></p>
+  </li>
+  <li>
+    <p>전처리 과정
+<img src="/assets/images/meit_gif_handreader.gif" alt="Sample GIF" />
+<br /></p>
+  </li>
+  <li>
+    <p>계산 과정</p>
+  </li>
+</ul>
+<video width="640" height="480" controls="" style="margin-top: -80px; margin-bottom: 50px;">
+  <source src="/assets/videos/meit_video_calculate.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+<ul>
+  <li>모터 작동 과정
+<img src="/assets/images/meit_gif_motor.gif" alt="Sample GIF" /></li>
+</ul>
+
+<p><br /></p>
+<h4 id="웹사이트">웹사이트</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">물건 정보 입력</th>
+      <th style="text-align: center">재고 정보</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![registration form](/assets/images/meit_registration.png)</td>
+      <td style="text-align: center">![stock data table](/assets/images/meit_stock_data_table.png)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">재고 정보 수정 / 삭제</td>
+      <td style="text-align: center">재고 검색</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![edit stock data](/assets/images/meit_edit_stock_data.png)</td>
+      <td style="text-align: center">![search stock data](/assets/images/meit_search_stock.png)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">태그 읽기</td>
+      <td style="text-align: center">태그 읽기 결과</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![read tag](/assets/images/meit_scan_tag.png)</td>
+      <td style="text-align: center">![read tag result](/assets/images/meit_scan_tag_result.png)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">모터 기록 조회</td>
+      <td style="text-align: center">모터 기록 검색</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![read motor data](/assets/images/meit_motor_data.png)</td>
+      <td style="text-align: center">![search motor data](/assets/images/meit_motor_search.png)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<h3 id="추후-개선점">추후 개선점</h3>
+<ul>
+  <li>AI 딥러닝 카메라를 설치하여 이상 행동을 감지함으로써 보안을 강화한다. 이를 통해 rfid 리더기 교란 행동을 비롯한 기타 눈속임을 탐지할 수 있다.</li>
+</ul>]]></content><author><name>oweenia03</name></author><category term="contest" /><category term="MEIT" /><category term="PHP" /><category term="Mysql" /><category term="Arduino" /><category term="WEB" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">블록체인 이론 및 응용</title><link href="http://localhost:4000/study/2024/09/03/blockchain.html" rel="alternate" type="text/html" title="블록체인 이론 및 응용" /><published>2024-09-03T00:00:00+09:00</published><updated>2024-09-03T00:00:00+09:00</updated><id>http://localhost:4000/study/2024/09/03/blockchain</id><content type="html" xml:base="http://localhost:4000/study/2024/09/03/blockchain.html"><![CDATA[<p><img src="/assets/images/blockchain.png" alt="banner" /></p>
+
+<h3 id="왜-블록체인인가">왜 블록체인인가</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">구글은 어떻게 여성을 차별하는가<br />(사피야 우모자)</th>
+      <th style="text-align: center">설명</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![Book](/assets/images/book_algorithms_of_oppression.jpg)</td>
+      <td style="text-align: center">&lt;div style="text-align: justify;"&gt;  이 책은 it 기업이 데이터를 수집하고 처리하는 방식에서 여성을 비롯해 흑인과 유대인 등의 특정 집단이 차별받고 있음을 고발한다.<br /> 블록체인의 투명성을 이용한다면 의도적 혐오 조장, 나아가 알고리즘 편향을 차단할 수 있지 않을까 생각했다.<br />  k-mooc에서 블록체인 이론에 관한 강의를 수강하였고, 추후 블록체인을 이용한 스마트컨트랙트를 구현해보며 블록체인을 응용해보고자 한다.&lt;/div&gt;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<h3 id="k-mooc-강의-정리">k-mooc 강의 정리</h3>
+<ul>
+  <li>
+    <h4 style="color: navy;">W1. Intro: 블록체인 핵심 기술과 활용 범위</h4>
+  </li>
+</ul>
+
+<div>
+    <button id="prev-page1">이전 페이지</button>
+    <input type="text" id="page-input1" placeholder="페이지 번호 입력" />
+    <button id="go-to-page1">이동</button>
+    <button id="next-page1">다음 페이지</button>
+    <span id="page-info1"></span> <!-- 페이지 정보 표시 -->
+</div>
+<div id="pdf-viewer1" style="width: 100%; height: 600px; margin-bottom: 300px;"></div>
+
+<ul>
+  <li>
+    <h4 style="color: navy;"> W2. Mechanics of Bitcoin: 암호학, 블록, 트랜잭션</h4>
+  </li>
+</ul>
+
+<div>
+    <button id="prev-page2">이전 페이지</button>
+    <input type="text" id="page-input2" placeholder="페이지 번호 입력" />
+    <button id="go-to-page2">이동</button>
+    <button id="next-page2">다음 페이지</button>
+    <span id="page-info2"></span> <!-- 페이지 정보 표시 -->
+</div>
+<div id="pdf-viewer2" style="width: 100%; height: 600px; margin-bottom: 300px;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
+
+<script>
+    // PDF 파일 경로 설정
+    const pdfUrls = [
+        '/assets/files/week1.pdf', // 첫 번째 PDF 파일 경로
+        '/assets/files/week2.pdf'  // 두 번째 PDF 파일 경로
+    ];
+
+    let pdfDocs = [null, null],
+        pageNums = [1, 1],
+        pageIsRendering = [false, false],
+        pageNumIsPending = [null, null];
+
+    // PDF.js 설정
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+    // PDF 문서 로드
+    pdfUrls.forEach((url, index) => {
+        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+            pdfDocs[index] = pdfDoc_;
+            renderPage(index, pageNums[index]);
+        });
+    });
+
+    // 페이지 렌더링 함수
+    const renderPage = (index, num) => {
+        pageIsRendering[index] = true;
+
+        pdfDocs[index].getPage(num).then(page => {
+            const viewport = page.getViewport({ scale: 1 });
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            document.getElementById(`pdf-viewer${index + 1}`).innerHTML = ''; // 이전 페이지 삭제
+            document.getElementById(`pdf-viewer${index + 1}`).appendChild(canvas);
+
+            const renderCtx = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+
+            page.render(renderCtx).promise.then(() => {
+                pageIsRendering[index] = false;
+
+                if (pageNumIsPending[index] !== null) {
+                    renderPage(index, pageNumIsPending[index]);
+                    pageNumIsPending[index] = null;
+                }
+
+                // 페이지 정보 업데이트
+                document.getElementById(`page-info${index + 1}`).textContent = `페이지 ${pageNums[index]} / ${pdfDocs[index].numPages}`;
+            });
+        });
+
+        document.getElementById(`page-input${index + 1}`).value = num; // 페이지 번호 업데이트
+    };
+
+    // 페이지 이동 버튼 이벤트
+    const setupPageNavigation = (index) => {
+        document.getElementById(`go-to-page${index + 1}`).addEventListener('click', () => {
+            const pageInput = document.getElementById(`page-input${index + 1}`).value;
+            const num = parseInt(pageInput);
+
+            if (num > 0 && num <= pdfDocs[index].numPages) {
+                pageNums[index] = num;
+                renderPage(index, pageNums[index]);
+            }
+        });
+
+        document.getElementById(`prev-page${index + 1}`).addEventListener('click', () => {
+            if (pageNums[index] <= 1) return; // 첫 페이지에서 이전 페이지 이동 방지
+            pageNums[index]--;
+            renderPage(index, pageNums[index]);
+        });
+
+        document.getElementById(`next-page${index + 1}`).addEventListener('click', () => {
+            if (pageNums[index] >= pdfDocs[index].numPages) return; // 마지막 페이지에서 다음 페이지 이동 방지
+            pageNums[index]++;
+            renderPage(index, pageNums[index]);
+        });
+    };
+
+    // 각 PDF에 대해 페이지 탐색 기능 설정
+    pdfUrls.forEach((_, index) => setupPageNavigation(index));
+</script>
+
+<h3 id="추후-공부-계획">추후 공부 계획</h3>
+<iframe src="https://www.inflearn.com/course/%EB%B8%94%EB%A1%9D%EC%B2%B4%EC%9D%B8-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-%EC%BD%94%EC%9D%B8%EC%A0%9C%EC%9E%91/dashboard" style="width:100%; height:500px;" frameborder="0"></iframe>
+
+<p><br /><br />현재 인프런에서 위 강의를 수강하고 있다. 실습을 통해 블록체인의 기본 언어인 솔리디티를 익히고, 방학 때 스마트 컨트랙트를 이용한 프로젝트를 진행하고자 한다.</p>]]></content><author><name>oweenia03</name></author><category term="study" /><category term="Blockchain" /><category term="Cryptography" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">파이썬 GUI 숫자야구게임</title><link href="http://localhost:4000/project/2024/06/17/quick-mardown-example.html" rel="alternate" type="text/html" title="파이썬 GUI 숫자야구게임" /><published>2024-06-17T00:00:00+09:00</published><updated>2024-06-17T00:00:00+09:00</updated><id>http://localhost:4000/project/2024/06/17/quick-mardown-example</id><content type="html" xml:base="http://localhost:4000/project/2024/06/17/quick-mardown-example.html"><![CDATA[<p><img src="https://github.com/jeffreytse/jekyll-theme-yat/assets/9413601/2ed22d49-90b1-4f7e-8e8f-b77b21dee505" alt="banner" /></p>
+
+<h3 id="게임-규칙">게임 규칙</h3>
+
+<!-- * **게임 규칙** -->
+
+<blockquote>
+  <p>사용자에게서 3 이상 9 이하의 자릿수를 입력받고, 그 자릿수에 맞게 랜덤으로 생성된 숫자를 스트라이크 볼 개수를 통해 추리하도록 하는 프로그램이다.</p>
+
+  <p>이때, 생성되는 각 자리 숫자는 1 ~ 9 사이의 자연수이고 중복되지 않는다.
+  자릿수와 숫자 모두 맞추면 스트라이크, 자릿수는 틀렸지만 숫자는 맞는 경우 볼이다.
+  모든 숫자를 자릿수에 맞게 맞추면 정답이다.</p>
+
+  <p>자릿수 입력 란에 -1 입력 시 프로그램 종료된다.</p>
+</blockquote>
+
+<!-- Paragraphs are separated by a blank line. -->
+
+<!-- 2nd paragraph. *Italic*, **bold**, and `monospace`. Itemized lists
+look like: -->
+<p><br /></p>
+
+<h3 id="프로그램-설명">프로그램 설명</h3>
+
+<ol>
+  <li>‘Let’s play the game of numbers baseball.’ 을 출력한다.</li>
+  <li>‘Enter the num: ‘을 출력한 뒤, 사용자에게 3 ~ 5 사이의 자연수 num 을 입력 받는다. (input 활용)</li>
+  <li>num 에 3 ~ 5 사이의 자연수가 아닌 값이 입력되면, 적절한 메시지 출력 후 num 을 다시 입력 받는다.</li>
+  <li>num 에 -1 이 입력되면 프로그램은 종료된다. (-1 이 입력될 때까지 게임을 계속한다.)</li>
+  <li>랜덤으로 num 자릿수의 숫자를 생성하여 변수 ranNum 에 저장한다<br />
+  ex) num 이 5 일 경우 자릿수가 5 인 숫자 12345 가 생성된다.<br />
+  단, ranNum 을 생성할 때 각 자리의 숫자는 1 ~ 9 사이의 자연수여야 하고, 중복된 수가 있으면 안된다.<br />
+  ex) ranNum 이 12234 일 경우, 2 가 중복되므로 다시 생성해야 한다</li>
+  <li>‘Enter the num digits(inputNum): ‘을 출력한 뒤, 사용자에게 숫자 num 자리를 입력 받는다.<br />
+  ex) num 이 5 일 경우, ‘Enter the 5 digits(inputNum): ’을 출력한 뒤, 사용자에게 숫자 5 자리를 입력 받는다.</li>
+  <li>게임 원리에 맞게 결과를 아래 형식으로 출력한다.<br />
+  ex) [result] x Strike y Ball</li>
+  <li>[6] &amp; [7]을 정답을 추리할 때까지 반복한다.</li>
+  <li>정답을 맞춘 경우, 정답이라는 문구를 출력한 뒤 게임을 다시 시작한다</li>
+</ol>
+
+<!-- Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
+in chapters 12--14"). Three dots ... will be converted to an ellipsis.
+Unicode is supported. ☺ -->
+
+<!-- 코드
+------------ -->
+
+<h3 id="코드">코드</h3>
+
+<p><a href="assets/files/graphics.py">Download graphics.py</a></p>
+
+<!-- Here's a numbered list: -->
+<!-- 
+1. first item
+ 2. second item
+ 3. third item
+
+Note again how the actual text starts at 4 columns in (4 characters
+from the left side). Here's a code sample:
+
+    # Let me re-iterate ...
+    for i in 1 .. 10 { do-something(i) }
+
+As you probably guessed, indented 4 spaces. By the way, instead of
+indenting the block, you can use delimited blocks, if you like:
+
+~~~
+define foobar() {
+    print "Welcome to flavor country!";
+}
+~~~
+
+(which makes copying & pasting easier). You can optionally mark the
+delimited block for Pandoc to syntax highlight it: 
+-->
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">graphics</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1"># graphics 모듈을 임포트
+</span><span class="kn">import</span> <span class="n">random</span>  <span class="c1"># random 모듈을 임포트
+</span>
+<span class="c1">#숫자 야구 게임을 구현하는 메인코드 클래스
+</span><span class="k">class</span> <span class="nc">Baseball</span><span class="p">:</span>
+    
+    <span class="c1">#매개변수 num으로 자릿수를 입력받고 생성된 랜덤 숫자를 변수self.ranNum에 할당하는 함수
+</span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">num</span><span class="p">):</span> 
+        <span class="n">self</span><span class="p">.</span><span class="n">num</span> <span class="o">=</span> <span class="n">num</span>  <span class="c1"># 매개변수 num의 값을 인스턴스 변수 self.num에 저장
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">ranNum</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">generate_random_number</span><span class="p">()</span> <span class="c1"># generate_random_number 메서드를 호출해 생성된 랜덤 숫자를 변수에 할당함
+</span>        
+    
+    <span class="c1">#고유한 자릿수를 가진 숫자를 중복되지 않게 랜덤으로 생성하고, 생성된 숫자를 반환하는 함수
+</span>    <span class="k">def</span> <span class="nf">generate_random_number</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+        <span class="n">testNum</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 랜덤 숫자를 저장할 리스트로 testNum 생성함
+</span>        <span class="n">ranNum</span> <span class="o">=</span> <span class="sh">''</span>  <span class="c1"># 변수 ranNum에 랜덤 숫자를 문자열로 저장함
+</span>        
+        <span class="k">while</span> <span class="nf">len</span><span class="p">(</span><span class="n">testNum</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">num</span><span class="p">:</span>  <span class="c1"># 입력받은 자릿수보다 testNum 리스트의 길이가 작을 시 반복됨 
+</span>            <span class="n">com</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># 1부터 9까지의 랜덤 숫자 생성해 변수 com에 할당함
+</span>            
+            <span class="k">if</span> <span class="n">com</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">testNum</span><span class="p">:</span>  <span class="c1"># 리스트 testNum에 변수 com에 해당하는 숫자가 없으면, 즉 숫자가 중복되지 않으면
+</span>                <span class="n">testNum</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">com</span><span class="p">)</span>  <span class="c1"># 숫자 com을 testNum 리스트에 추가
+</span>                <span class="n">ranNum</span> <span class="o">+=</span> <span class="nf">str</span><span class="p">(</span><span class="n">com</span><span class="p">)</span>  <span class="c1"># 숫자 com을 문자열로 변환하여 변수 ranNum에 저장함
+</span>        <span class="k">return</span> <span class="n">ranNum</span>  <span class="c1"># 생성된 랜덤 숫자 ranNum을 반환함
+</span>    
+    
+    <span class="c1">#사용자가 입력한 추측값에 대해 스트라이크와 볼을 계산하고 반환하는 함수
+</span>    <span class="k">def</span> <span class="nf">guess_number</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">guess</span><span class="p">):</span> <span class="c1">#매개변수 guess로 추측값을 입력받음
+</span>        <span class="n">strike</span><span class="p">,</span> <span class="n">ball</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>  <span class="c1"># 스트라이크와 볼의 초기값을 0으로 설정
+</span>        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">num</span><span class="p">):</span>  <span class="c1"># 입력된 자릿수만큼 반복
+</span>            <span class="k">if</span> <span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">ranNum</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>  <span class="c1"># 사용자가 추측한 값의 i번째 자릿수와 생성된 랜덤숫자의 i번째 자릿수가 동일하면
+</span>                <span class="n">strike</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># 스트라이크 1 증가
+</span>                
+            <span class="k">elif</span> <span class="n">guess</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">self</span><span class="p">.</span><span class="n">ranNum</span><span class="p">:</span>  <span class="c1"># 사용자가 추측한 값의 i번째 자릿수가 생성된 랜덤숫자에 존재하지만 자릿수가 맞지 않으면
+</span>                <span class="n">ball</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># 볼 1 증가
+</span>        <span class="k">return</span> <span class="n">strike</span><span class="p">,</span> <span class="n">ball</span>  <span class="c1"># 스트라이크와 볼의 수를 튜플로 반환
+</span>
+
+<span class="c1">#숫자 야구 게임을 그래픽과 함께 실행하는 메인 함수
+</span><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Let</span><span class="sh">'</span><span class="s">s play the game of numbers baseball.</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 게임 시작 시 콘솔창에 메시지 출력
+</span>
+    <span class="c1"># 그래픽 창 생성 및 설정
+</span>    <span class="n">win</span> <span class="o">=</span> <span class="nc">GraphWin</span><span class="p">(</span><span class="sh">"</span><span class="s">숫자 야구 게임</span><span class="sh">"</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>  <span class="c1"># 400x300 크기의 그래픽 창 생성
+</span>    <span class="n">win</span><span class="p">.</span><span class="nf">setCoords</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)</span>  <span class="c1"># 좌표 시스템 설정 (0.0, 0.0)에서 (4.0, 4.0)으로
+</span>
+    <span class="c1"># 초기 화면에 필요한 요소들 생성
+</span>    <span class="n">text_input</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="sh">"</span><span class="s">숫자 입력 (3 ~ 9) : </span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 자릿수 입력 텍스트 생성
+</span>    <span class="n">text_input</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    <span class="n">input_field</span> <span class="o">=</span> <span class="nc">Entry</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="mi">9</span><span class="p">)</span>  <span class="c1"># 입력 필드 생성 (Entry 위젯의 시각적 너비 상 9자리까지 보임)
+</span>    <span class="n">input_field</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">0</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 초기 값을 "0"으로 설정
+</span>    <span class="n">input_field</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    
+    <span class="n">result_output</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">),</span> <span class="sh">""</span><span class="p">)</span>  <span class="c1"># 경고 메세지와 스트라이크 볼 개수를 출력하기 위한 텍스트 생성
+</span>    <span class="n">result_output</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    
+    <span class="n">message</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="sh">"</span><span class="s">-1 입력시 프로그램 종료됩니다</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 프로그램 종료 안내 텍스트 생성
+</span>    <span class="n">message</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sh">""</span><span class="p">)</span>  <span class="c1"># 정답 메시지 출력 위한 텍스트 생성
+</span>    <span class="n">answer</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    
+    <span class="n">gamestart</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sh">"</span><span class="s">*</span><span class="se">\n</span><span class="s">Let</span><span class="sh">'</span><span class="s">s play</span><span class="se">\n</span><span class="s"> the game of</span><span class="se">\n</span><span class="s"> numbers baseball</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 게임 시작 텍스트 생성
+</span>    <span class="n">gamestart</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    
+    <span class="c1"># 랜덤 숫자 생성기 버튼
+</span>    <span class="n">button</span> <span class="o">=</span> <span class="nc">Text</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">),</span> <span class="sh">"</span><span class="s">랜덤 숫자 생성기</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 버튼 텍스트 생성
+</span>    <span class="n">button</span><span class="p">.</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 그래픽 창에 그리기
+</span>    <span class="nc">Rectangle</span><span class="p">(</span><span class="nc">Point</span><span class="p">(</span><span class="mf">1.45</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">),</span> <span class="nc">Point</span><span class="p">(</span><span class="mf">2.55</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">)).</span><span class="nf">draw</span><span class="p">(</span><span class="n">win</span><span class="p">)</span>  <span class="c1"># 버튼 주위에 사각형 그려 버튼 모양을 만듦
+</span>    
+    <span class="n">game</span> <span class="o">=</span> <span class="bp">None</span>  <span class="c1"># 게임 객체 초기화
+</span>    
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>  <span class="c1"># 무한 루프 시작
+</span>        <span class="n">click_point</span> <span class="o">=</span> <span class="n">win</span><span class="p">.</span><span class="nf">getMouse</span><span class="p">()</span>  <span class="c1"># 사용자가 마우스 클릭한 위치 좌표 가져옴
+</span>        
+        <span class="c1"># 클릭한 위치가 "랜덤 숫자 생성기" 버튼의 영역 내에 있을 때
+</span>        <span class="k">if</span> <span class="mf">1.45</span> <span class="o">&lt;=</span> <span class="n">click_point</span><span class="p">.</span><span class="nf">getX</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">2.55</span> <span class="ow">and</span> <span class="mf">1.5</span> <span class="o">&lt;=</span> <span class="n">click_point</span><span class="p">.</span><span class="nf">getY</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">2.1</span><span class="p">:</span>  
+            <span class="n">num_str</span> <span class="o">=</span> <span class="n">input_field</span><span class="p">.</span><span class="nf">getText</span><span class="p">()</span> <span class="c1">#num_str 변수를 사용해 사용자 입력을 문자열로 가져옴
+</span>            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Enter the num: </span><span class="si">{</span><span class="n">num_str</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 사용자가 입력한 자릿수를 콘솔에 출력
+</span>            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">num_str</span><span class="p">)</span>  <span class="c1"># 입력 필드에서 사용자가 입력한 값을 정수 num으로 변환
+</span>           
+                <span class="k">if</span> <span class="n">num</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>  <span class="c1"># 입력 값이 -1이면
+</span>                    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Quit the game.</span><span class="sh">"</span><span class="p">)</span> 
+                    <span class="k">break</span>  <span class="c1"># 콘솔창에 종료 메시지 출력하고 프로그램 종료
+</span>                
+                <span class="k">elif</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">num</span> <span class="o">&gt;</span><span class="mi">9</span><span class="p">:</span>  <span class="c1"># 입력 값이 3보다 작거나 9보다 크면
+</span>                    <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">숫자 3 ~ 9를 입력하세요</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 경고 메시지 그래픽창에 출력
+</span>                    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Enter the natural number between 3 and 9.</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span> <span class="c1"># 콘솔 창에 동일한 의미의 메시지 출력
+</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># 입력 값이 유효하면
+</span>                    <span class="n">game</span> <span class="o">=</span> <span class="nc">Baseball</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>  <span class="c1"># 클래스 Baseball의 인스턴스 생성
+</span>                    <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span>  <span class="c1"># 경고 메시지 그래픽 창에서 안 보이게 하기 위해 택스트 초기화함
+</span>                    <span class="n">text_input</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">추측값 입력 : </span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 자릿수 입력 텍스트에서 추측값 입력으로 텍스트 변경
+</span>                    <span class="n">button</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">스트라이크-볼</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># "랜덤 숫자 생성기"에서 "스트라이크-볼"로 버튼 텍스트 변경
+</span>                    <span class="n">message</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">game</span><span class="p">.</span><span class="n">num</span><span class="si">}</span><span class="s">자리 입력</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 프로그램 종료 안내 택스트에서 자릿수 안내 텍스트로 변경
+</span>                    <span class="n">answer</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span>  <span class="c1"># 정답 텍스트 안 보이게 하기 위해 텍스트 초기화
+</span>                    <span class="n">gamestart</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span>  <span class="c1"># 게임 시작 텍스트 초기화
+</span>                    
+                    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>  <span class="c1"># 또 다른 무한 루프 시작
+</span>                        <span class="n">click_point</span> <span class="o">=</span> <span class="n">win</span><span class="p">.</span><span class="nf">getMouse</span><span class="p">()</span>  <span class="c1"># 그래픽 창에서 마우스 클릭한 위치 좌표를 변수 click_point에 저장함
+</span>                        
+                        <span class="k">if</span> <span class="mf">1.45</span> <span class="o">&lt;=</span> <span class="n">click_point</span><span class="p">.</span><span class="nf">getX</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">2.55</span> <span class="ow">and</span> <span class="mf">1.5</span> <span class="o">&lt;=</span> <span class="n">click_point</span><span class="p">.</span><span class="nf">getY</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mf">2.1</span><span class="p">:</span>  <span class="c1"># 클릭한 위치가 버튼 영역 내에 있을 때
+</span>                            <span class="n">guess</span> <span class="o">=</span> <span class="n">input_field</span><span class="p">.</span><span class="nf">getText</span><span class="p">()</span>  <span class="c1"># 입력 필드에서 사용자가 입력한 값을 변수 guess에 저장함
+</span>                            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">Enter the </span><span class="si">{</span><span class="n">game</span><span class="p">.</span><span class="n">num</span><span class="si">}</span><span class="s"> digits(inputNum): </span><span class="si">{</span><span class="n">guess</span><span class="si">}</span><span class="sh">"</span><span class="p">)</span> <span class="c1"># 사용자가 입력한 추측값을 콘솔에 출력함 
+</span>                            <span class="c1"># {game.num}은 게임에서 요구하는 숫자의 자릿수를 의미함
+</span>                            
+                            <span class="c1">#사용자가 입력한 값의 길이가 게임에서 요구하는 자릿수와 다르거나, 유효하지 않은 값을 입력한 경우
+</span>                            <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span> <span class="o">!=</span> <span class="n">game</span><span class="p">.</span><span class="n">num</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">guess</span><span class="p">.</span><span class="nf">isdigit</span><span class="p">():</span> 
+                                <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="si">{</span><span class="n">game</span><span class="p">.</span><span class="n">num</span><span class="si">}</span><span class="s"> 자리 숫자를 입력하세요.</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 그래픽창에 경고 메시지 출력
+</span>                                <span class="k">continue</span> <span class="c1"># 반복문 처음으로 돌아가 추측값 재입력 받음
+</span>                            
+                            <span class="n">strike</span><span class="p">,</span> <span class="n">ball</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="nf">guess_number</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>  <span class="c1"># 스트라이크와 볼 계산
+</span>                            <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[결과] </span><span class="si">{</span><span class="n">strike</span><span class="si">}</span><span class="s"> 스트라이크 </span><span class="si">{</span><span class="n">ball</span><span class="si">}</span><span class="s"> 볼</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 스트라이크 볼 개수 결과를 그래픽 창에 출력
+</span>                            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="sh">"</span><span class="s">[result] </span><span class="si">{</span><span class="n">strike</span><span class="si">}</span><span class="s"> Strike </span><span class="si">{</span><span class="n">ball</span><span class="si">}</span><span class="s"> Ball</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 스트라이크 볼 개수 결과를 콘솔에 출력
+</span>                            
+                            <span class="k">if</span> <span class="n">strike</span> <span class="o">==</span> <span class="n">game</span><span class="p">.</span><span class="n">num</span><span class="p">:</span>  <span class="c1"># 정답을 맞추면, 즉 사용자가 입력한 숫자와 정답 숫자가 그 자릿수까지 모두 일치하면
+</span>                                <span class="k">break</span> <span class="c1"># 무한 루프 종료함
+</span>                            
+                    <span class="c1"># 정답을 맞췄을 때 초기 화면으로 돌아가기 위한 설정
+</span>                    <span class="n">answer</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">정답!</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#그래픽창에 "정답!" 표시
+</span>                    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Congratulations, you got it!</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#콘솔에 정답 메시지 출력함
+</span>                    
+                    <span class="n">gamestart</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">*</span><span class="se">\n</span><span class="s">Let</span><span class="sh">'</span><span class="s">s play</span><span class="se">\n</span><span class="s"> the game of</span><span class="se">\n</span><span class="s"> numbers baseball</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#그래픽창에 게임 시작 문구 출력함
+</span>                    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Let</span><span class="sh">'</span><span class="s">s play the game of numbers baseball.</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#콘솔에 게임 시작 문구 출력함
+</span>                    
+                    <span class="n">text_input</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">숫자 입력 (3 ~ 9) : </span><span class="sh">"</span><span class="p">)</span> <span class="c1">#그래픽창에 입력 문구 출력함
+</span>                    <span class="n">input_field</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">0</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#입력 필드 값 0으로 설정함
+</span>                    
+                    <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">""</span><span class="p">)</span> <span class="c1">#그래픽 창에 스트라이크 볼 개수 결과 문구 안 보이게 하기 위해 텍스트 초기화함
+</span>                    <span class="n">button</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">랜덤 숫자 생성기</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#"스트라이크-볼"에서 "랜덤 숫자 생성기"로 버튼 텍스트 변경함
+</span>                    <span class="n">message</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">-1 입력시 프로그램 종료됩니다</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#그래픽창에 프로그램 종료 안내 문구 표시함
+</span>                    
+                    
+            <span class="k">except</span> <span class="nb">ValueError</span><span class="p">:</span> <span class="c1">#사용자가 자릿수 입력에서 정수가 아닌 값을 입력 시 발생하는 ValueError 예외를 처리함
+</span>                <span class="n">result_output</span><span class="p">.</span><span class="nf">setText</span><span class="p">(</span><span class="sh">"</span><span class="s">잘못된 입력입니다.</span><span class="sh">"</span><span class="p">)</span> <span class="c1">#에러 메시지 그래픽창에 출력함
+</span>                <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Invalid input.</span><span class="se">\n</span><span class="sh">"</span><span class="p">)</span>  <span class="c1"># 에러 메시지를 콘솔에 출력
+</span>    
+    <span class="n">win</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>  <span class="c1"># 그래픽 창 닫기
+</span>
+
+<span class="nf">main</span><span class="p">()</span>  <span class="c1"># 메인 함수 실행
+</span></code></pre></div></div>
+
+<h3 id="결과">결과</h3>
+
+<p><img src="/assets/images/1.jpg" alt="example image" title="An exemplary image" />
+<br />
+<img src="/assets/images/2.jpg" alt="example image" title="An exemplary image" /></p>
+
+<!-- 1. First, get these ingredients:
+
+      * carrots
+      * celery
+      * lentils
+
+ 2. Boil some water.
+
+ 3. Dump everything in the pot and follow
+    this algorithm:
+
+        find wooden spoon
+        uncover pot
+        stir
+        cover pot
+        balance wooden spoon precariously on pot handle
+        wait 10 minutes
+        goto first step (or shut off burner when done)
+
+    Do not bump wooden spoon or it will fall.
+
+Notice again how text always lines up on 4-space indents (including
+that last line which continues item 3 above).
+
+Here's a link to [a website](http://foo.bar), to a [local
+doc](local-doc.html), and to a [section heading in the current
+doc](#an-h2-header). Here's a footnote [^1].
+
+[^1]: Some footnote text.
+
+Tables can look like this:
+
+Name           Size  Material      Color
+------------- -----  ------------  ------------
+All Business      9  leather       brown
+Roundabout       10  hemp canvas   natural
+Cinderella       11  glass         transparent
+
+Table: Shoes sizes, materials, and colors.
+
+(The above is the caption for the table.) Pandoc also supports
+multi-line tables:
+
+--------  -----------------------
+Keyword   Text
+--------  -----------------------
+red       Sunsets, apples, and
+          other red or reddish
+          things.
+
+green     Leaves, grass, frogs
+          and other things it's
+          not easy being.
+--------  -----------------------
+
+A horizontal rule follows.
+
+***
+
+Here's a definition list:
+
+apples
+  : Good for making applesauce.
+
+oranges
+  : Citrus!
+
+tomatoes
+  : There's no "e" in tomatoe.
+
+Again, text is indented 4 spaces. (Put a blank line between each
+term and  its definition to spread things out more.)
+
+Here's a "line block" (note how whitespace is honored):
+
+| Line one
+|   Line too
+| Line tree
+
+and images can be specified like so:
+
+![example image](https://user-images.githubusercontent.com/9413601/123900693-1d9ebd00-d99c-11eb-8e9e-cf7879187606.png "An exemplary image")
+
+Inline math equation: $\omega = d\phi / dt$. Display
+math should get its own line like so:
+
+\$\$I = \int \rho R^{2} dV\$\$
+
+And note that you can backslash-escape any punctuation characters
+which you wish to be displayed literally, ex.: \`foo\`, \*bar\*, etc. 
+-->]]></content><author><name>oweenia03</name></author><category term="project" /><category term="Python" /><category term="GUI" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">여행 ♡LOG</title><link href="http://localhost:4000/project/2024/05/27/web1.html" rel="alternate" type="text/html" title="여행 ♡LOG" /><published>2024-05-27T00:00:00+09:00</published><updated>2024-05-27T00:00:00+09:00</updated><id>http://localhost:4000/project/2024/05/27/web1</id><content type="html" xml:base="http://localhost:4000/project/2024/05/27/web1.html"><![CDATA[<p><img src="/assets/images/web_1.png" alt="banner" /></p>
+
+<p><br />
+<strong>생활코딩</strong>에서 HTML, CSS, Javascript 강의를 수강한 후, 웹페이지 제작 프로젝트를 진행하였다. 
+일상 속 특별한 일을 기록하고자 개인 블로그를 만들었다.</p>
+
+<p><strong>웹사이트 주소:</strong> <a href="https://oweenia03.github.io/vlog/index.html">https://oweenia03.github.io/vlog/index.html</a><br />
+<strong>github 파일:</strong> <a href="https://github.com/oweenia03/vlog">https://github.com/oweenia03/vlog</a></p>
+
+<h3 id="웹페이지-기획서">웹페이지 기획서</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Home</th>
+      <th style="text-align: center">Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![Home](/assets/images/SISS_page-0001.jpg)</td>
+      <td style="text-align: center">![Category](/assets/images/SISS_page-0002.jpg)</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Body</td>
+      <td style="text-align: center">Plus</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td style="text-align: center">![Body](/assets/images/SISS_page-0003.jpg)</td>
+      <td style="text-align: center">![Plus](/assets/images/SISS_page-0004.jpg)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="기능-소개">기능 소개</h3>
+
+<ul>
+  <li>light / dark 모드 지원</li>
+  <li>spotify에서 음원을 가져와 배경 음악으로 틀 수 있도록 함</li>
+  <li>2022년부터 2024년까지 카테고리를 나누고, 그 안에서 이미지를 클릭하면 해당 페이지로 리디렉션되도록 함</li>
+  <li>페이지는 사진을 넘겨 볼 수 있도록 하고, 사진을 넘기면 해당하는 사진에 맞게 글이 나오도록 구현함</li>
+  <li>like 버튼을 삽입하여 guest가 like 버튼을 누르면 수치가 집계되어서 보이도록 함</li>
+  <li>편지함을 통해 guest와 소통할 수 있음</li>
+  <li>사물함을 통해 랜덤한 페이지로 리디렉션하게 함</li>
+</ul>
+
+<h3 id="시현-영상">시현 영상</h3>
+
+<video width="640" height="480" controls="">
+  <source src="/assets/videos/VLOG_시현.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+<h3 id="후기">후기</h3>
+
+<ul>
+  <li>
+    <p><strong>개선점</strong></p>
+
+    <ul>
+      <li>like 버튼 클릭한 횟수 출력</li>
+      <li>guest와 메세지 주고 받기</li>
+      <li>사물함 랜덤 페이지 리디렉션 구현</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+<ul>
+  <li>
+    <p><strong>깨달은 점</strong></p>
+
+    <p>-&gt; 완성도 있는 웹사이트를 제작하기 위해서는 DB와 백엔드 기능을 익혀야 함을 깨달음<br />
+  -&gt; PHP와 Mysql 공부 시작</p>
+  </li>
+</ul>]]></content><author><name>oweenia03</name></author><category term="project" /><category term="HTML" /><category term="CSS" /><category term="Javascript" /><category term="WEB" /><summary type="html"><![CDATA[]]></summary></entry></feed>
